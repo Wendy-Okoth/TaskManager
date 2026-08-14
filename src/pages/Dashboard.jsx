@@ -2,26 +2,29 @@ import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useTasks } from '../hooks/useTasks';
 import TaskForm from '../components/Tasks/TaskForm';
+import TaskItem from '../components/Tasks/TaskItem';
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
-  const { tasks, loading, error, addTask } = useTasks();
+  const { tasks, loading, error, addTask, updateTask, deleteTask } = useTasks();
   const [showForm, setShowForm] = useState(false);
 
   return (
-    <div className="p-4 max-w-4xl mx-auto">
+    <div className="p-4 max-w-3xl mx-auto bg-[#FAFAF7] min-h-screen">
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-800 dark:text-white">Task Manager</h1>
+      <div className="flex justify-between items-center mb-8 border-b border-[#E5E4E1] pb-4">
+        <h1 className="text-2xl font-medium text-[#1C1C1A] tracking-tight">
+          field notes
+        </h1>
         <div className="flex items-center gap-4">
-          <span className="text-sm text-gray-600 dark:text-gray-300">
+          <span className="font-mono text-sm text-[#5B6470]">
             {user?.email}
           </span>
           <button
             onClick={logout}
-            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
+            className="px-3 py-1.5 text-sm border border-[#E5E4E1] hover:bg-[#E5E4E1] dark:hover:bg-[#2E303A] rounded transition text-[#1C1C1A] dark:text-[#FAFAF7]"
           >
-            Sign Out
+            sign out
           </button>
         </div>
       </div>
@@ -29,29 +32,31 @@ const Dashboard = () => {
       {/* Add Task button */}
       <button
         onClick={() => setShowForm(true)}
-        className="mb-6 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-md transition"
+        className="mb-6 px-4 py-2 bg-[#3F6C51] hover:bg-[#2F5A41] text-white font-medium rounded-md transition text-sm"
       >
-        + Add Task
+        + add task
       </button>
 
       {/* Loading state */}
       {loading && (
         <div className="text-center py-8">
-          <p className="text-gray-500">Loading your tasks...</p>
+          <p className="text-[#5B6470] font-mono text-sm">loading tasks...</p>
         </div>
       )}
 
       {/* Error state */}
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
-          <p>Error loading tasks: {error}</p>
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4 text-sm">
+          <p>error: {error}</p>
         </div>
       )}
 
       {/* Empty state */}
       {!loading && !error && tasks.length === 0 && (
-        <div className="text-center py-12 bg-gray-50 dark:bg-gray-800 rounded-lg">
-          <p className="text-gray-500 text-lg">No tasks yet. Click "Add Task" to create your first one!</p>
+        <div className="text-center py-16 bg-white dark:bg-[#1C1C1A] rounded-lg border border-[#E5E4E1] dark:border-[#2E303A]">
+          <p className="text-[#5B6470] font-mono text-sm">
+            no tasks yet. add one above.
+          </p>
         </div>
       )}
 
@@ -59,29 +64,12 @@ const Dashboard = () => {
       {!loading && !error && tasks.length > 0 && (
         <div className="space-y-3">
           {tasks.map((task) => (
-            <div
+            <TaskItem
               key={task.id}
-              className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow border border-gray-200 dark:border-gray-700"
-            >
-              <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
-                {task.title}
-              </h3>
-              {task.description && (
-                <p className="text-gray-600 dark:text-gray-300 text-sm mt-1">
-                  {task.description}
-                </p>
-              )}
-              <div className="flex items-center gap-3 mt-2 text-sm">
-                <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded">
-                  {task.status || 'To Do'}
-                </span>
-                {task.dueDate && (
-                  <span className="text-gray-500">
-                    Due: {new Date(task.dueDate).toLocaleDateString()}
-                  </span>
-                )}
-              </div>
-            </div>
+              task={task}
+              onUpdate={updateTask}
+              onDelete={deleteTask}
+            />
           ))}
         </div>
       )}

@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
-import { collection, query, where, onSnapshot, addDoc } from 'firebase/firestore';
+import { 
+  collection, query, where, onSnapshot, addDoc, 
+  updateDoc, deleteDoc, doc // ← add these imports
+} from 'firebase/firestore';
 import { db } from '../firebase';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -42,7 +45,7 @@ export function useTasks() {
     return unsubscribe;
   }, [user]);
 
-  // ➕ ADD TASK
+  // ➕ Add Task
   const addTask = async (taskData) => {
     if (!user) throw new Error('You must be logged in to add a task');
 
@@ -58,5 +61,19 @@ export function useTasks() {
     await addDoc(collection(db, 'tasks'), newTask);
   };
 
-  return { tasks, loading, error, addTask };
+  // ✏️ Update Task
+  const updateTask = async (taskId, updates) => {
+    if (!user) throw new Error('You must be logged in');
+    const taskRef = doc(db, 'tasks', taskId);
+    await updateDoc(taskRef, updates);
+  };
+
+  // 🗑️ Delete Task
+  const deleteTask = async (taskId) => {
+    if (!user) throw new Error('You must be logged in');
+    const taskRef = doc(db, 'tasks', taskId);
+    await deleteDoc(taskRef);
+  };
+
+  return { tasks, loading, error, addTask, updateTask, deleteTask };
 }
