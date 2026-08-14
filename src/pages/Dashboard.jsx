@@ -1,9 +1,12 @@
+import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useTasks } from '../hooks/useTasks';
+import TaskForm from '../components/Tasks/TaskForm';
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
-  const { tasks, loading, error } = useTasks();
+  const { tasks, loading, error, addTask } = useTasks();
+  const [showForm, setShowForm] = useState(false);
 
   return (
     <div className="p-4 max-w-4xl mx-auto">
@@ -23,6 +26,14 @@ const Dashboard = () => {
         </div>
       </div>
 
+      {/* Add Task button */}
+      <button
+        onClick={() => setShowForm(true)}
+        className="mb-6 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-md transition"
+      >
+        + Add Task
+      </button>
+
       {/* Loading state */}
       {loading && (
         <div className="text-center py-8">
@@ -40,11 +51,11 @@ const Dashboard = () => {
       {/* Empty state */}
       {!loading && !error && tasks.length === 0 && (
         <div className="text-center py-12 bg-gray-50 dark:bg-gray-800 rounded-lg">
-          <p className="text-gray-500 text-lg">No tasks yet. Create your first task!</p>
+          <p className="text-gray-500 text-lg">No tasks yet. Click "Add Task" to create your first one!</p>
         </div>
       )}
 
-      {/* Task list (for now, just show titles) */}
+      {/* Task list */}
       {!loading && !error && tasks.length > 0 && (
         <div className="space-y-3">
           {tasks.map((task) => (
@@ -73,6 +84,14 @@ const Dashboard = () => {
             </div>
           ))}
         </div>
+      )}
+
+      {/* Task Form Modal */}
+      {showForm && (
+        <TaskForm
+          onClose={() => setShowForm(false)}
+          onSave={addTask}
+        />
       )}
     </div>
   );

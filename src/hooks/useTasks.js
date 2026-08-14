@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { collection, query, where, onSnapshot } from 'firebase/firestore';
+import { collection, query, where, onSnapshot, addDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -9,21 +9,19 @@ export function useTasks() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Fetch tasks (real‑time)
   useEffect(() => {
-    // If no user is logged in, clear tasks and stop loading
     if (!user) {
       setTasks([]);
       setLoading(false);
       return;
     }
 
-    // Build the query: get all tasks where userId equals the current user's UID
     const q = query(
       collection(db, 'tasks'),
       where('userId', '==', user.uid)
     );
 
-    // Subscribe to real‑time updates
     const unsubscribe = onSnapshot(
       q,
       (snapshot) => {
@@ -41,9 +39,24 @@ export function useTasks() {
       }
     );
 
-    // Cleanup subscription on unmount or when user changes
     return unsubscribe;
   }, [user]);
 
-  return { tasks, loading, error };
+  // ➕ ADD TASK
+  const addTask = async (taskData) => {
+    if (!user) throw new Error('You must be logged in to add a task');
+
+    const newTask = {
+      title: taskData.title.trim(),
+      description: taskData.description?.trim() || '',
+      status: taskData.status || 'To Do',
+      dueDate: taskData.dueDate || null,
+      userId: user.uid,
+      createdAt: new Date().toISOString(),
+    };
+
+    await addDoc(collection(db, 'tasks'), newTask);
+  };
+
+  return { tasks, loading, error, addTask };
 }
