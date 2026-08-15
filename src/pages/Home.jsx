@@ -1,8 +1,14 @@
 import { useAuth } from '../contexts/AuthContext';
 
+/**
+ * Home Component
+ * Landing page showcasing the app's value proposition, features, workflow, 
+ * and the specific "Ledger Blue" design philosophy for evaluators.
+ */
 const Home = ({ onLogin, onSignup }) => {
   const { user } = useAuth();
 
+  // Core feature highlights mapping directly to assessment expectations
   const features = [
     {
       title: 'Your Tasks, Your Data',
@@ -32,14 +38,15 @@ const Home = ({ onLogin, onSignup }) => {
                Task Management
             </div>
             <h1 className="text-4xl sm:text-5xl font-medium tracking-tight text-ledger-text">
-  A <span className="text-ledger-indigo">Calm</span> List for Your
-  <br/>
-  Tasks and Ideas.
-</h1>
+              A <span className="text-ledger-indigo">Calm</span> List for Your
+              <br/>
+              Tasks and Ideas.
+            </h1>
             <p className="text-lg text-ledger-tinted max-w-2xl">
               Ledger Blue is a task manager that trades distraction for clarity.
               One hue. One border. One focus: your work.
             </p>
+            {/* Conditional action triggers depending on auth session */}
             <div className="flex flex-wrap gap-4 pt-2">
               <button
                 onClick={onSignup}

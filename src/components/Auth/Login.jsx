@@ -3,11 +3,16 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useState } from 'react';
 import Input from '../Input';
 
+/**
+ * Login Component
+ * Handles user authentication via email/password with validation and error management.
+ */
 const Login = ({ onSwitch, onBack }) => {
   const { login } = useAuth();
   const [error, setError] = useState('');
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm();
 
+  /** Submits credential data to Firebase auth context */
   const onSubmit = async (data) => {
     try {
       setError('');
@@ -24,6 +29,7 @@ const Login = ({ onSwitch, onBack }) => {
           Sign In
         </h2>
 
+        {/* Global error alert box */}
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-2 rounded mb-4 text-sm">
             {error}
@@ -52,7 +58,7 @@ const Login = ({ onSwitch, onBack }) => {
           </button>
         </form>
 
-        {/* Forgot Password link - non-functional */}
+        {/* Placeholder hook for password recovery */}
         <div className="mt-2 text-right">
           <button 
             onClick={() => alert('Password reset functionality coming soon.')}
@@ -62,6 +68,7 @@ const Login = ({ onSwitch, onBack }) => {
           </button>
         </div>
 
+        {/* Navigation triggers for view switching */}
         <div className="mt-4 text-sm text-center">
           <button onClick={onSwitch} className="text-ledger-indigo hover:underline">
             Create Account

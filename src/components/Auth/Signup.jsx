@@ -3,12 +3,20 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useState } from 'react';
 import Input from '../Input';
 
+/**
+ * Signup Component
+ * Manages new user registration with client-side password strength validation 
+ * and confirmation matching before calling Firebase authentication.
+ */
 const Signup = ({ onSwitch, onBack }) => {
   const { signup } = useAuth();
   const [error, setError] = useState('');
   const { register, handleSubmit, watch, formState: { errors, isSubmitting } } = useForm();
+  
+  // Watch password field to dynamically validate confirmation matching
   const password = watch('password');
 
+  /** Submits validated user credentials to Firebase Auth */
   const onSubmit = async (data) => {
     try {
       setError('');
@@ -18,6 +26,7 @@ const Signup = ({ onSwitch, onBack }) => {
     }
   };
 
+  // Complex regex enforcing strong password security standards
   const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
   return (
@@ -27,6 +36,7 @@ const Signup = ({ onSwitch, onBack }) => {
           Create Account
         </h2>
 
+        {/* Global error alert box */}
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-2 rounded mb-4 text-sm">
             {error}
@@ -54,6 +64,7 @@ const Signup = ({ onSwitch, onBack }) => {
               })}
               error={errors.password}
             />
+            {/* Helper guidance for password requirements */}
             <p className="mt-1 text-xs text-ledger-tinted">
               (min 8 chars · upper/lower · number · special)
             </p>
@@ -76,6 +87,7 @@ const Signup = ({ onSwitch, onBack }) => {
           </button>
         </form>
 
+        {/* Navigation triggers for view switching */}
         <div className="mt-4 text-sm text-center">
           <button onClick={onSwitch} className="text-ledger-indigo hover:underline">
             Already Have an Account? Sign In
