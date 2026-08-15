@@ -7,7 +7,7 @@ Designed with a single indigo hue, left‑edge status borders, and zero visual n
 
 ---
 
-## ✨ Features
+## Features
 
 - **Authentication** – Sign up, sign in, sign out with strong password validation (min 8 chars, uppercase, lowercase, number, special character).
 - **Task CRUD** – Create, edit, mark complete, and delete tasks. Each task has a title, description, status (To Do, In Progress, Done), and due date.
@@ -20,7 +20,7 @@ Designed with a single indigo hue, left‑edge status borders, and zero visual n
 
 ---
 
-## 🧰 Tech Stack
+## Tech Stack
 
 | Technology | Purpose |
 |------------|---------|
@@ -33,7 +33,7 @@ Designed with a single indigo hue, left‑edge status borders, and zero visual n
 
 ---
 
-## 📋 Setup Instructions
+## Setup Instructions
 
 ### 1. Clone the repository
 ```bash
@@ -62,7 +62,7 @@ npm run build
 
 ---
 
-## 🔐 Environment Variables
+## Environment Variables
 
 Create a `.env` file with the following variables (obtain these from your Firebase project settings):
 
@@ -79,7 +79,7 @@ VITE_FIREBASE_APP_ID=your-app-id
 
 ---
 
-## 🏛️ Architecture & Design Decisions
+## Architecture & Design Decisions
 
 ### Component Structure
 
@@ -122,7 +122,7 @@ Using Firestore `onSnapshot` ensures tasks update instantly without page refresh
 
 ---
 
-## 🔒 Security & Access Control
+## Security & Access Control
 
 Firestore security rules enforce that users can only access their own tasks.
 
@@ -154,20 +154,20 @@ service cloud.firestore {
 
 ---
 
-## ⚠️ Assumptions & Limitations
+## Assumptions & Limitations
 
-| Limitation | Status | Planned? |
-|------------|--------|----------|
-| Password reset ("Forgot Password?") | Non‑functional link | ✅ Yes |
-| Task archiving | Not implemented | ❌ No |
-| Task priorities (Low/Medium/High) | Not implemented | ✅ Yes |
-| Task search | Not implemented | ✅ Yes |
-| Task labels/tags | Not implemented | ✅ Yes |
-| Mobile testing | Limited | ❌ No |
+| Limitation | Status |
+|------------|--------|
+| Password reset ("Forgot Password?") | Non‑functional link |
+| Task archiving | Not implemented |
+| Task priorities (Low/Medium/High) | Not implemented |
+| Task search | Not implemented |
+| Task labels/tags | Not implemented |
+| Mobile testing | Limited |
 
 ---
 
-## 🚀 If I Had More Time
+## If I Had More Time
 
 Here are improvements I would prioritise:
 
@@ -206,23 +206,20 @@ Though the theme respects system preferences, a dedicated toggle would improve u
 
 ---
 
-## 📦 Optional Enhancements Implemented
+## Enhancements Implemented
 
-| Enhancement | Description | Points |
-|-------------|-------------|--------|
-| ✅ Filtering | Filter tasks by status (All, To Do, In Progress, Done) | - |
-| ✅ Sorting | Sort by due date, created date, or title (asc/desc) | - |
-| ✅ Real‑time updates | Firestore `onSnapshot` for instant UI updates | - |
-| ✅ Responsive design | Works across desktop and mobile screen sizes | - |
-| ✅ Accessibility | Semantic HTML, ARIA labels on action buttons, focus management | - |
-
----
-
-## 📝 License
-
-This project is created for a take‑home assessment and is not licensed for redistribution.
+| Enhancement | Description |
+|-------------|-------------|
+| Filtering | Filter tasks by status (All, To Do, In Progress, Done) |
+| Sorting | Sort by due date, created date, or title (asc/desc) |
+| Real‑time updates | Firestore `onSnapshot` for instant UI updates |
+| Responsive design | Works across desktop and mobile screen sizes |
+| Accessibility | Semantic HTML, ARIA labels on action buttons, focus management |
 
 ---
 
-**Built with ❤️ using React + Firebase**
+## License
 
+This project is not licensed for redistribution.
+
+---
