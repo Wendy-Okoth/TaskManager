@@ -6,7 +6,6 @@ const TaskForm = ({ onClose, onSave, initialData }) => {
   const [error, setError] = useState('');
   const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm();
 
-  // Pre-fill form when editing
   useEffect(() => {
     if (initialData) {
       reset({
@@ -29,10 +28,10 @@ const TaskForm = ({ onClose, onSave, initialData }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-      <div className="bg-[#FAFAF7] dark:bg-[#1C1C1A] rounded-lg shadow-xl max-w-md w-full p-6 border border-[#E5E4E1]">
-        <h2 className="text-2xl font-medium mb-4 text-[#1C1C1A] dark:text-[#FAFAF7]">
-          {initialData ? 'Edit Task' : 'Add New Task'}
+    <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+      <div className="bg-white border border-ledger-pale rounded max-w-md w-full p-6">
+        <h2 className="text-2xl font-medium text-ledger-text mb-4">
+          {initialData ? 'edit task' : 'add task'}
         </h2>
 
         {error && (
@@ -57,16 +56,16 @@ const TaskForm = ({ onClose, onSave, initialData }) => {
           />
 
           <div className="mb-4">
-            <label className="block text-sm font-medium text-[#5B6470] dark:text-[#9CA3AF] mb-1">
+            <label className="block text-sm font-medium text-ledger-tinted mb-1">
               Status
             </label>
             <select
               {...register('status')}
-              className="w-full px-3 py-2 border border-[#E5E4E1] dark:border-[#2E303A] rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#3F6C51] bg-white dark:bg-[#1C1C1A] text-[#1C1C1A] dark:text-[#FAFAF7] font-mono text-sm"
+              className="w-full px-3 py-2 border border-ledger-pale rounded focus:outline-none focus:ring-2 focus:ring-ledger-indigo/30 focus:border-ledger-indigo bg-white text-ledger-text"
             >
-              <option value="To Do">● To Do</option>
-              <option value="In Progress">◐ In Progress</option>
-              <option value="Done">● Done</option>
+              <option value="To Do">To Do</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Done">Done</option>
             </select>
           </div>
 
@@ -81,16 +80,16 @@ const TaskForm = ({ onClose, onSave, initialData }) => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex-1 py-2 px-4 bg-[#3F6C51] hover:bg-[#2F5A41] text-white font-medium rounded-md transition disabled:opacity-50"
+              className="flex-1 py-2 px-4 bg-ledger-indigo hover:bg-ledger-indigo/90 text-white font-medium rounded transition disabled:opacity-50"
             >
-              {isSubmitting ? 'Saving...' : initialData ? 'Update Task' : 'Add Task'}
+              {isSubmitting ? 'saving...' : initialData ? 'update' : 'add'}
             </button>
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-2 px-4 bg-[#E5E4E1] hover:bg-[#D5D4D1] dark:bg-[#2E303A] dark:hover:bg-[#3E404A] text-[#1C1C1A] dark:text-[#FAFAF7] font-medium rounded-md transition"
+              className="flex-1 py-2 px-4 border border-ledger-pale hover:bg-ledger-pale rounded transition"
             >
-              Cancel
+              cancel
             </button>
           </div>
         </form>

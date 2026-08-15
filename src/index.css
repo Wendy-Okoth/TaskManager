@@ -4,20 +4,25 @@
 
 @layer base {
   body {
-    @apply bg-field-bg text-field-text font-sans antialiased;
+    @apply bg-ledger-bg text-ledger-text font-sans antialiased;
   }
 }
 
-/* Status dot styling (will be used in task items) */
-.status-dot {
-  @apply inline-block w-2 h-2 rounded-full mr-1.5;
+/* Status border styles for task items */
+.task-border-todo {
+  @apply border-l-[3px] border-ledger-tinted;
 }
-.status-dot-todo {
-  @apply bg-field-secondary;
+.task-border-progress {
+  @apply border-l-[3px] border-ledger-indigo;
 }
-.status-dot-progress {
-  @apply bg-field-amber;
+.task-border-done {
+  @apply border-l-[3px] border-transparent;
 }
-.status-dot-done {
-  @apply bg-field-green;
+.task-border-overdue {
+  @apply border-l-[3px] border-ledger-brick;
+}
+
+/* Task text states */
+.task-done {
+  @apply opacity-50 line-through;
 }

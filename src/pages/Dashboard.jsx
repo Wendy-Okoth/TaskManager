@@ -3,6 +3,8 @@ import { useAuth } from '../contexts/AuthContext';
 import { useTasks } from '../hooks/useTasks';
 import TaskForm from '../components/Tasks/TaskForm';
 import TaskItem from '../components/Tasks/TaskItem';
+import Navbar from '../components/Layout/Navbar';
+import Footer from '../components/Layout/Footer';
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
@@ -10,77 +12,60 @@ const Dashboard = () => {
   const [showForm, setShowForm] = useState(false);
 
   return (
-    <div className="p-4 max-w-3xl mx-auto bg-[#FAFAF7] min-h-screen">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-8 border-b border-[#E5E4E1] pb-4">
-        <h1 className="text-2xl font-medium text-[#1C1C1A] tracking-tight">
-          field notes
-        </h1>
-        <div className="flex items-center gap-4">
-          <span className="font-mono text-sm text-[#5B6470]">
-            {user?.email}
-          </span>
+    <div className="min-h-screen flex flex-col bg-ledger-bg">
+      <Navbar user={user} onLogout={logout} />
+
+      <main className="flex-1 max-w-3xl mx-auto w-full px-4 py-8">
+        <div className="flex justify-between items-center mb-6 border-b-2 border-ledger-pale pb-2">
+          <h2 className="text-xl font-medium text-ledger-text">Tasks</h2>
           <button
-            onClick={logout}
-            className="px-3 py-1.5 text-sm border border-[#E5E4E1] hover:bg-[#E5E4E1] dark:hover:bg-[#2E303A] rounded transition text-[#1C1C1A] dark:text-[#FAFAF7]"
+            onClick={() => setShowForm(true)}
+            className="px-4 py-1.5 bg-ledger-indigo hover:bg-ledger-indigo/90 text-white text-sm rounded transition"
           >
-            sign out
+            + Add Task
           </button>
         </div>
-      </div>
 
-      {/* Add Task button */}
-      <button
-        onClick={() => setShowForm(true)}
-        className="mb-6 px-4 py-2 bg-[#3F6C51] hover:bg-[#2F5A41] text-white font-medium rounded-md transition text-sm"
-      >
-        + add task
-      </button>
+        {loading && (
+          <div className="text-center py-8">
+            <p className="text-ledger-tinted text-sm">Loading Tasks...</p>
+          </div>
+        )}
 
-      {/* Loading state */}
-      {loading && (
-        <div className="text-center py-8">
-          <p className="text-[#5B6470] font-mono text-sm">loading tasks...</p>
-        </div>
-      )}
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4 text-sm">
+            Error: {error}
+          </div>
+        )}
 
-      {/* Error state */}
-      {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4 text-sm">
-          <p>error: {error}</p>
-        </div>
-      )}
+        {!loading && !error && tasks.length === 0 && (
+          <div className="text-center py-16 border border-ledger-pale bg-ledger-card rounded">
+            <p className="text-ledger-tinted text-sm">No Tasks Yet. Add One Above.</p>
+          </div>
+        )}
 
-      {/* Empty state */}
-      {!loading && !error && tasks.length === 0 && (
-        <div className="text-center py-16 bg-white dark:bg-[#1C1C1A] rounded-lg border border-[#E5E4E1] dark:border-[#2E303A]">
-          <p className="text-[#5B6470] font-mono text-sm">
-            no tasks yet. add one above.
-          </p>
-        </div>
-      )}
+        {!loading && !error && tasks.length > 0 && (
+          <div className="divide-y divide-ledger-pale">
+            {tasks.map((task) => (
+              <TaskItem
+                key={task.id}
+                task={task}
+                onUpdate={updateTask}
+                onDelete={deleteTask}
+              />
+            ))}
+          </div>
+        )}
 
-      {/* Task list */}
-      {!loading && !error && tasks.length > 0 && (
-        <div className="space-y-3">
-          {tasks.map((task) => (
-            <TaskItem
-              key={task.id}
-              task={task}
-              onUpdate={updateTask}
-              onDelete={deleteTask}
-            />
-          ))}
-        </div>
-      )}
+        {showForm && (
+          <TaskForm
+            onClose={() => setShowForm(false)}
+            onSave={addTask}
+          />
+        )}
+      </main>
 
-      {/* Task Form Modal */}
-      {showForm && (
-        <TaskForm
-          onClose={() => setShowForm(false)}
-          onSave={addTask}
-        />
-      )}
+      <Footer />
     </div>
   );
 };

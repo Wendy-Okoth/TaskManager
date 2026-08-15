@@ -3,7 +3,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useState } from 'react';
 import Input from '../Input';
 
-const Login = ({ onSwitch }) => {
+const Login = ({ onSwitch, onBack }) => {
   const { login } = useAuth();
   const [error, setError] = useState('');
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm();
@@ -18,33 +18,61 @@ const Login = ({ onSwitch }) => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white dark:bg-gray-900 rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-6 text-center text-gray-800 dark:text-white">Sign In</h2>
-      {error && <p className="mb-4 text-sm text-red-600 bg-red-50 p-2 rounded">{error}</p>}
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Input
-          label="Email"
-          type="email"
-          register={register('email', { required: 'Email is required' })}
-          error={errors.email}
-        />
-        <Input
-          label="Password"
-          type="password"
-          register={register('password', { required: 'Password is required', minLength: { value: 6, message: 'Minimum 6 characters' } })}
-          error={errors.password}
-        />
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="w-full py-2 px-4 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-md transition disabled:opacity-50"
-        >
-          {isSubmitting ? 'Signing in...' : 'Sign In'}
-        </button>
-      </form>
-      <p className="mt-4 text-sm text-center text-gray-600 dark:text-gray-400">
-        Don't have an account? <button onClick={onSwitch} className="text-purple-600 hover:underline">Sign Up</button>
-      </p>
+    <div className="min-h-screen bg-ledger-bg flex items-center justify-center p-4">
+      <div className="bg-ledger-card border border-ledger-pale rounded max-w-md w-full p-6">
+        <h2 className="text-2xl font-medium text-ledger-text mb-4 border-b-2 border-ledger-pale pb-2">
+          Sign In
+        </h2>
+
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-2 rounded mb-4 text-sm">
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Input
+            label="Email"
+            type="email"
+            register={register('email', { required: 'Email is required' })}
+            error={errors.email}
+          />
+          <Input
+            label="Password"
+            type="password"
+            register={register('password', { required: 'Password is required' })}
+            error={errors.password}
+          />
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full py-2 px-4 bg-ledger-indigo hover:bg-ledger-indigo/90 text-white font-medium rounded transition disabled:opacity-50"
+          >
+            {isSubmitting ? 'Signing In...' : 'Sign In'}
+          </button>
+        </form>
+
+        {/* Forgot Password link - non-functional */}
+        <div className="mt-2 text-right">
+          <button 
+            onClick={() => alert('Password reset functionality coming soon.')}
+            className="text-sm text-ledger-brick hover:underline"
+          >
+            Forgot Password?
+          </button>
+        </div>
+
+        <div className="mt-4 text-sm text-center">
+          <button onClick={onSwitch} className="text-ledger-indigo hover:underline">
+            Create Account
+          </button>
+        </div>
+        <div className="mt-2 text-xs text-center">
+          <button onClick={onBack} className="text-ledger-tinted hover:underline">
+            ← Back to Home
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
