@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form';
 import { useAuth } from '../../contexts/AuthContext';
 import { useState } from 'react';
 import Input from '../Input';
+import { CheckSquare } from 'lucide-react';
 
 /**
  * Login Component
@@ -24,14 +25,20 @@ const Login = ({ onSwitch, onBack }) => {
 
   return (
     <div className="min-h-screen bg-ledger-bg flex items-center justify-center p-4">
-      <div className="bg-ledger-card border border-ledger-pale rounded max-w-md w-full p-6">
-        <h2 className="text-2xl font-medium text-ledger-text mb-4 border-b-2 border-ledger-pale pb-2">
-          Sign In
+      <div className="bg-ledger-card border border-ledger-pale rounded-lg shadow-sm max-w-md w-full p-8">
+        {/* Logo / Brand header */}
+        <div className="flex items-center justify-center gap-2 mb-6">
+          <CheckSquare size={28} className="text-ledger-indigo" strokeWidth={1.5} />
+          <span className="text-xl font-medium text-ledger-indigo tracking-tight">Ledger Blue</span>
+        </div>
+
+        <h2 className="text-2xl font-medium text-ledger-text mb-6 text-center">
+          Welcome Back
         </h2>
 
         {/* Global error alert box */}
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-2 rounded mb-4 text-sm">
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4 text-sm">
             {error}
           </div>
         )}
@@ -52,15 +59,15 @@ const Login = ({ onSwitch, onBack }) => {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full py-2 px-4 bg-ledger-indigo hover:bg-ledger-indigo/90 text-white font-medium rounded transition disabled:opacity-50"
+            className="w-full py-2.5 px-4 bg-ledger-indigo hover:bg-ledger-indigo/90 text-white font-medium rounded transition disabled:opacity-50 mt-2"
           >
             {isSubmitting ? 'Signing In...' : 'Sign In'}
           </button>
         </form>
 
         {/* Placeholder hook for password recovery */}
-        <div className="mt-2 text-right">
-          <button 
+        <div className="mt-3 text-right">
+          <button
             onClick={() => alert('Password reset functionality coming soon.')}
             className="text-sm text-ledger-brick hover:underline"
           >
@@ -69,12 +76,15 @@ const Login = ({ onSwitch, onBack }) => {
         </div>
 
         {/* Navigation triggers for view switching */}
-        <div className="mt-4 text-sm text-center">
-          <button onClick={onSwitch} className="text-ledger-indigo hover:underline">
-            Create Account
-          </button>
+        <div className="mt-6 pt-4 border-t border-ledger-pale text-sm text-center">
+          <p className="text-ledger-tinted">
+            Don't have an account?{' '}
+            <button onClick={onSwitch} className="text-ledger-indigo hover:underline font-medium">
+              Create Account
+            </button>
+          </p>
         </div>
-        <div className="mt-2 text-xs text-center">
+        <div className="mt-3 text-xs text-center">
           <button onClick={onBack} className="text-ledger-tinted hover:underline">
             ← Back to Home
           </button>

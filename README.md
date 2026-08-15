@@ -55,7 +55,7 @@ npm run dev
 ```
 The app will be available at `http://localhost:5173`.
 
-### 5. (Optional) Build for production
+### 5. Build for production
 ```bash
 npm run build
 ```

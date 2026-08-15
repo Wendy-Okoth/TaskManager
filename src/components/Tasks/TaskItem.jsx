@@ -4,7 +4,7 @@ import TaskForm from './TaskForm';
 /**
  * TaskItem component - displays a single task with color-coded status
  * - Status colors: Red (To Do), Amber (In Progress), Green (Done)
- * - Left border changes based on status
+ * - Left border is ALWAYS visible based on status (never transparent)
  * - Overdue tasks show brick red border and text
  * - Complete toggle moves between To Do and Done
  */
@@ -40,14 +40,12 @@ const TaskItem = ({ task, onUpdate, onDelete }) => {
   // Get the status color object
   const statusStyle = statusColors[task.status] || statusColors['To Do'];
 
-  // Determine border class (overdue overrides status)
+  // Determine border class (overdue overrides status, but NEVER transparent)
   const borderClass = isOverdue
     ? 'border-l-[3px] border-ledger-brick'
-    : isDone
-    ? 'border-l-[3px] border-ledger-done'
     : `border-l-[3px] ${statusStyle.border}`;
 
-  // Text class for done tasks
+  // Text class for done tasks (fade and strikethrough, but border remains green)
   const textClass = isDone ? 'opacity-50 line-through' : '';
 
   /**
@@ -57,6 +55,13 @@ const TaskItem = ({ task, onUpdate, onDelete }) => {
   const handleToggleComplete = () => {
     const newStatus = task.status === 'Done' ? 'To Do' : 'Done';
     onUpdate(task.id, { status: newStatus });
+  };
+
+  // Format date with time
+  const formatDateWithTime = (dateString) => {
+    if (!dateString) return null;
+    const date = new Date(dateString);
+    return date.toLocaleDateString() + ' at ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
 
   return (
@@ -86,16 +91,16 @@ const TaskItem = ({ task, onUpdate, onDelete }) => {
                 {task.status}
               </span>
 
-              {/* Due date with overdue styling */}
+              {/* Due date with time and overdue styling */}
               {task.dueDate && (
                 <span className={isOverdue && !isDone ? 'text-ledger-brick font-medium' : 'text-ledger-tinted'}>
-                  Due: {new Date(task.dueDate).toLocaleDateString()}
+                  Due: {formatDateWithTime(task.dueDate)}
                 </span>
               )}
 
               <span className="text-ledger-tinted/40">·</span>
               <span className="text-ledger-tinted/40">
-                Created: {new Date(task.createdAt).toLocaleDateString()}
+                Created: {formatDateWithTime(task.createdAt)}
               </span>
             </div>
           </div>

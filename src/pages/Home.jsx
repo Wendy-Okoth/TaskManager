@@ -1,8 +1,9 @@
 import { useAuth } from '../contexts/AuthContext';
+import { ClipboardList, Shield, Zap, Palette } from 'lucide-react';
 
 /**
  * Home Component
- * Landing page showcasing the app's value proposition, features, workflow, 
+ * Landing page showcasing the app's value proposition, features, workflow,
  * and the specific "Ledger Blue" design philosophy for evaluators.
  */
 const Home = ({ onLogin, onSignup }) => {
@@ -11,18 +12,17 @@ const Home = ({ onLogin, onSignup }) => {
   // Core feature highlights mapping directly to assessment expectations
   const features = [
     {
+      icon: <Shield size={20} className="text-ledger-indigo" strokeWidth={1.5} />,
       title: 'Your Tasks, Your Data',
       description: 'Every task is stored with user-level access control. No one else can see or touch your work.',
     },
     {
-      title: 'Quiet, Focused Design',
-      description: 'No badges, no pills, no noise. Just a clean list with subtle state indicators.',
-    },
-    {
+      icon: <Zap size={20} className="text-ledger-indigo" strokeWidth={1.5} />,
       title: 'Real‑Time Updates',
       description: 'Changes appear instantly across all your devices. No refresh needed.',
     },
     {
+      icon: <Palette size={20} className="text-ledger-indigo" strokeWidth={1.5} />,
       title: 'Ledger Blue Theme',
       description: 'A single indigo hue with warmth. One signature move: the left‑edge status border.',
     },
@@ -32,35 +32,36 @@ const Home = ({ onLogin, onSignup }) => {
     <div className="min-h-screen flex flex-col bg-ledger-bg">
       {/* Hero Section */}
       <section className="py-16 px-4 border-b border-ledger-pale">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex flex-col items-start gap-6">
-            <div className="inline-block border border-ledger-pale bg-ledger-card rounded px-3 py-1 text-xs font-medium text-ledger-indigo tracking-wider uppercase">
-               Task Management
-            </div>
-            <h1 className="text-4xl sm:text-5xl font-medium tracking-tight text-ledger-text">
-              A <span className="text-ledger-indigo">Calm</span> List for Your
-              <br/>
-              Tasks and Ideas.
-            </h1>
-            <p className="text-lg text-ledger-tinted max-w-2xl">
-              Ledger Blue is a task manager that trades distraction for clarity.
-              One hue. One border. One focus: your work.
-            </p>
-            {/* Conditional action triggers depending on auth session */}
-            <div className="flex flex-wrap gap-4 pt-2">
-              <button
-                onClick={onSignup}
-                className="px-6 py-2.5 bg-ledger-indigo hover:bg-ledger-indigo/90 text-white rounded transition text-sm font-medium"
-              >
-                Get Started
-              </button>
-              <button
-                onClick={onLogin}
-                className="px-6 py-2.5 border border-ledger-pale bg-ledger-card hover:bg-ledger-pale rounded transition text-sm font-medium"
-              >
-                Sign In
-              </button>
-            </div>
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="flex justify-center mb-6">
+            <ClipboardList size={64} className="text-ledger-indigo" strokeWidth={1.5} />
+          </div>
+          <div className="inline-block border border-ledger-pale bg-ledger-card rounded px-3 py-1 text-xs font-medium text-ledger-indigo tracking-wider uppercase mb-4">
+              Task Management
+          </div>
+          <h1 className="text-4xl sm:text-5xl font-medium tracking-tight text-ledger-text">
+            A <span className="text-ledger-indigo">Calm</span> List for Your
+            <br />
+            Tasks and Ideas.
+          </h1>
+          <p className="text-lg text-ledger-tinted max-w-2xl mx-auto mt-4">
+            Ledger Blue is a task manager that trades distraction for clarity.
+            One hue. One border. One focus: your work.
+          </p>
+          {/* Conditional action triggers depending on auth session */}
+          <div className="flex flex-wrap justify-center gap-4 pt-6">
+            <button
+              onClick={onSignup}
+              className="px-6 py-2.5 bg-ledger-indigo hover:bg-ledger-indigo/90 text-white rounded transition text-sm font-medium"
+            >
+              Get Started
+            </button>
+            <button
+              onClick={onLogin}
+              className="px-6 py-2.5 border border-ledger-pale bg-ledger-card hover:bg-ledger-pale rounded transition text-sm font-medium"
+            >
+              Sign In
+            </button>
           </div>
         </div>
       </section>
@@ -69,14 +70,15 @@ const Home = ({ onLogin, onSignup }) => {
       <section className="py-16 px-4 border-b border-ledger-pale">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-2xl font-medium text-ledger-text mb-8 border-b-2 border-ledger-pale pb-2 inline-block">
-            Why Ledger?
+            Why <span className="text-ledger-indigo">Ledger Blue</span>?
           </h2>
-          <div className="grid sm:grid-cols-2 gap-6 mt-4">
+          <div className="grid sm:grid-cols-3 gap-6 mt-4">
             {features.map((feature, index) => (
               <div
                 key={index}
-                className="border border-ledger-pale bg-ledger-card p-6 rounded hover:shadow-sm transition"
+                className="border border-ledger-pale bg-ledger-card p-6 rounded hover:shadow-sm transition group"
               >
+                <div className="mb-3">{feature.icon}</div>
                 <h3 className="font-semibold text-ledger-text mb-2">{feature.title}</h3>
                 <p className="text-sm text-ledger-tinted leading-relaxed">
                   {feature.description}

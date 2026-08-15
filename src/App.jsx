@@ -1,22 +1,30 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from './contexts/AuthContext';
 import Login from './components/Auth/Login';
 import Signup from './components/Auth/Signup';
-import Dashboard from './pages/Dashboard';
+import WelcomePage from './pages/WelcomePage';
+import TasksPage from './pages/TasksPage';
 import Home from './pages/Home';
 import Navbar from './components/Layout/Navbar';
 import Footer from './components/Layout/Footer';
 
 /**
  * Main Application Routing & State Controller
- * Evaluates authentication session state and view routing modes to render 
- * either public marketing pages, auth views, or the protected user dashboard.
+ * Evaluates authentication session state and view routing modes.
+ * When user signs out, resets authMode to null to show the home page.
  */
 function App() {
   const { user, loading, logout } = useAuth();
   const [authMode, setAuthMode] = useState(null); // null: home, 'login', 'signup'
+  const [page, setPage] = useState('welcome');   // 'welcome' or 'tasks'
 
-  // Graceful loading state while Firebase resolves active session token
+  // Reset authMode when user signs out → return to home page
+  useEffect(() => {
+    if (!user) {
+      setAuthMode(null);
+    }
+  }, [user]);
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-ledger-bg">
@@ -25,12 +33,23 @@ function App() {
     );
   }
 
-  // Authenticated route: direct access to private user dashboard
   if (user) {
-    return <Dashboard />;
+    return (
+      <div className="min-h-screen flex flex-col bg-ledger-bg">
+        <Navbar
+          user={user}
+          onLogout={logout}
+          currentPage={page}
+          setPage={setPage}
+        />
+        <main className="flex-1">
+          {page === 'welcome' ? <WelcomePage /> : <TasksPage />}
+        </main>
+        <Footer />
+      </div>
+    );
   }
 
-  // Authentication view switching modes
   if (authMode === 'login') {
     return <Login onSwitch={() => setAuthMode('signup')} onBack={() => setAuthMode(null)} />;
   }
@@ -38,7 +57,6 @@ function App() {
     return <Signup onSwitch={() => setAuthMode('login')} onBack={() => setAuthMode(null)} />;
   }
 
-  // Public unauthenticated landing layout
   return (
     <div className="min-h-screen flex flex-col bg-ledger-bg">
       <Navbar
