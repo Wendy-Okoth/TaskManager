@@ -1,20 +1,228 @@
+# Ledger Blue · Task Manager
 
-# React + Vite
+A calm, focused task management application built with React and Firebase.  
+Designed with a single indigo hue, left‑edge status borders, and zero visual noise.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Live demo:** *[Coming soon – deployment pending]*
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## ✨ Features
 
-## React Compiler
+- **Authentication** – Sign up, sign in, sign out with strong password validation (min 8 chars, uppercase, lowercase, number, special character).
+- **Task CRUD** – Create, edit, mark complete, and delete tasks. Each task has a title, description, status (To Do, In Progress, Done), and due date.
+- **User‑owned data** – Tasks are scoped to each user via Firestore security rules and query filters.
+- **Real‑time updates** – Changes appear instantly across all devices using Firestore's `onSnapshot`.
+- **Filtering & Sorting** – Filter tasks by status (All, To Do, In Progress, Done) and sort by due date, created date, or title (ascending/descending).
+- **Color‑coded status** – Red for To Do, Amber for In Progress, Green for Done. Overdue tasks get a brick‑red left border.
+- **Responsive design** – Works on desktop and mobile screens.
+- **Ledger Blue theme** – One hue family, warm‑neutral background, minimal UI with clear states.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## 🧰 Tech Stack
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
-=======
-# TaskManager
+| Technology | Purpose |
+|------------|---------|
+| React (Vite) | Frontend framework & build tool |
+| Tailwind CSS | Styling & theming |
+| react-hook-form | Form handling & validation |
+| Firebase Authentication | User management |
+| Cloud Firestore | Database & real-time updates |
+| Firebase Hosting | Deployment *(planned)* |
+
+---
+
+## 📋 Setup Instructions
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/Wendy-Okoth/TaskManager.git
+cd TaskManager
+```
+
+### 2. Install dependencies
+```bash
+npm install
+```
+
+### 3. Set up environment variables
+Create a `.env` file in the root directory and add your Firebase configuration (see [Environment Variables](#-environment-variables) below).
+
+### 4. Start the development server
+```bash
+npm run dev
+```
+The app will be available at `http://localhost:5173`.
+
+### 5. (Optional) Build for production
+```bash
+npm run build
+```
+
+---
+
+## 🔐 Environment Variables
+
+Create a `.env` file with the following variables (obtain these from your Firebase project settings):
+
+```env
+VITE_FIREBASE_API_KEY=your-api-key
+VITE_FIREBASE_AUTH_DOMAIN=your-auth-domain
+VITE_FIREBASE_PROJECT_ID=your-project-id
+VITE_FIREBASE_STORAGE_BUCKET=your-storage-bucket
+VITE_FIREBASE_MESSAGING_SENDER_ID=your-sender-id
+VITE_FIREBASE_APP_ID=your-app-id
+```
+
+> **Never commit the `.env` file** – it is already included in `.gitignore`.
+
+---
+
+## 🏛️ Architecture & Design Decisions
+
+### Component Structure
+
+The application follows a modular, feature‑based structure:
+
+```
+src/
+├── components/
+│   ├── Auth/          – Login and Signup forms
+│   ├── Layout/        – Navbar and Footer
+│   └── Tasks/         – TaskItem, TaskForm, TaskFilters
+├── contexts/          – AuthContext (user state)
+├── hooks/             – useTasks (Firestore CRUD + filtering/sorting)
+├── pages/             – Home, Dashboard
+└── firebase.js        – Firebase initialisation
+```
+
+### State Management
+
+- **Authentication** – React Context (`AuthContext`) with `onAuthStateChanged` listener.
+- **Tasks** – Custom hook (`useTasks`) that:
+  - Subscribes to Firestore `onSnapshot` for real‑time updates.
+  - Applies filtering and sorting via `useMemo` for performance.
+  - Provides CRUD operations (`addTask`, `updateTask`, `deleteTask`).
+
+### Styling Strategy
+
+- **Tailwind CSS** with a custom `Ledger Blue` theme.
+- **Single hue family** – Indigo at three weights (full, tinted, pale).
+- **Status indicator** – Left‑edge border (3px) that changes colour based on task state:
+  - To Do → Tinted Indigo
+  - In Progress → Solid Indigo
+  - Done → Transparent (task fades to 50% opacity + strikethrough)
+  - Overdue → Brick Red
+- **Typography** – Inter for everything, with 600 weight for titles and 400 at 90% size for metadata.
+
+### Real‑time Updates
+
+Using Firestore `onSnapshot` ensures tasks update instantly without page refresh – a key requirement for a modern task manager.
+
+---
+
+## 🔒 Security & Access Control
+
+Firestore security rules enforce that users can only access their own tasks.
+
+**Rules (published in Firebase Console):**
+
+```
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /tasks/{taskId} {
+      allow read, update, delete: if request.auth != null && request.auth.uid == resource.data.userId;
+      allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
+    }
+  }
+}
+```
+
+**What these rules enforce:**
+
+- Only authenticated users can read/write.
+- Users can only see tasks where `userId` matches their own UID.
+- Creation requires the `userId` field to match the authenticated user.
+
+**Additional security measures:**
+
+- All sensitive configuration is stored in environment variables.
+- `.env` is excluded from version control.
+- Firebase Authentication handles password hashing and session management.
+
+---
+
+## ⚠️ Assumptions & Limitations
+
+| Limitation | Status | Planned? |
+|------------|--------|----------|
+| Password reset ("Forgot Password?") | Non‑functional link | ✅ Yes |
+| Task archiving | Not implemented | ❌ No |
+| Task priorities (Low/Medium/High) | Not implemented | ✅ Yes |
+| Task search | Not implemented | ✅ Yes |
+| Task labels/tags | Not implemented | ✅ Yes |
+| Mobile testing | Limited | ❌ No |
+
+---
+
+## 🚀 If I Had More Time
+
+Here are improvements I would prioritise:
+
+### 1. Password Reset
+Implement Firebase's `sendPasswordResetEmail` to make the "Forgot Password" link functional.
+
+### 2. Task Priorities
+Add a priority field (Low/Medium/High) with visual cues (e.g., subtle dot or border weight).
+
+### 3. Task Search
+Add a live search bar to filter tasks by title or description – a natural companion to the existing filter/sort.
+
+### 4. Task Labels/Tags
+Allow users to add custom labels for better organisation (e.g., "Work", "Personal", "Shopping").
+
+### 5. Archive & Restore
+Soft‑delete tasks and allow restoration from an archive view – avoids permanent data loss.
+
+### 6. Keyboard Shortcuts
+Add shortcuts for power users (e.g., `Ctrl+N` to add a task, `Esc` to close modals).
+
+### 7. Accessibility Improvements
+Add more ARIA attributes, ensure full keyboard navigation, and test with screen readers.
+
+### 8. Automated Tests
+Write unit and integration tests for critical flows:
+- Authentication (signup, login, logout)
+- Task CRUD operations
+- Filtering and sorting logic
+
+### 9. Performance Optimisation
+Implement pagination or infinite scroll for large task lists.
+
+### 10. Dark Mode Toggle
+Though the theme respects system preferences, a dedicated toggle would improve user control.
+
+---
+
+## 📦 Optional Enhancements Implemented
+
+| Enhancement | Description | Points |
+|-------------|-------------|--------|
+| ✅ Filtering | Filter tasks by status (All, To Do, In Progress, Done) | - |
+| ✅ Sorting | Sort by due date, created date, or title (asc/desc) | - |
+| ✅ Real‑time updates | Firestore `onSnapshot` for instant UI updates | - |
+| ✅ Responsive design | Works across desktop and mobile screen sizes | - |
+| ✅ Accessibility | Semantic HTML, ARIA labels on action buttons, focus management | - |
+
+---
+
+## 📝 License
+
+This project is created for a take‑home assessment and is not licensed for redistribution.
+
+---
+
+**Built with ❤️ using React + Firebase**
 
