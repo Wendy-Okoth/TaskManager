@@ -34,7 +34,7 @@ Designed with a single indigo hue, left‑edge status borders, and zero visual n
 | react-hook-form | Form handling & validation |
 | Firebase Authentication | User management |
 | Cloud Firestore | Database & real-time updates |
-| Firebase Hosting | Deployment *(planned)* |
+| Firebase Hosting | Deployment |
 
 ---
 
