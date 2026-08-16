@@ -4,6 +4,7 @@ import { useAuth } from '../../contexts/AuthContext';
 /**
  * Forgot Password Modal
  * Allows users to request a password reset email.
+ * Includes a spam folder reminder to help users locate the email.
  */
 const ForgotPasswordModal = ({ onClose }) => {
   const { resetPassword } = useAuth();
@@ -20,9 +21,8 @@ const ForgotPasswordModal = ({ onClose }) => {
 
     try {
       await resetPassword(email);
-      setMessage('Password reset email sent! Check your inbox.');
-      // Optionally close modal after success after a delay
-      setTimeout(onClose, 3000);
+      setMessage('Password reset email sent! Check your inbox (and spam folder).');
+      setTimeout(onClose, 4000);
     } catch (err) {
       setError(err.message || 'Failed to send reset email.');
     } finally {
@@ -65,6 +65,7 @@ const ForgotPasswordModal = ({ onClose }) => {
               placeholder="you@example.com"
             />
           </div>
+
           <div className="flex gap-3">
             <button
               type="submit"
@@ -82,6 +83,10 @@ const ForgotPasswordModal = ({ onClose }) => {
             </button>
           </div>
         </form>
+
+        <p className="mt-4 text-xs text-ledger-tinted text-center">
+          If you don't see the email, please check your spam or junk folder.
+        </p>
       </div>
     </div>
   );

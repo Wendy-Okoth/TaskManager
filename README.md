@@ -10,11 +10,16 @@ Designed with a single indigo hue, left‑edge status borders, and zero visual n
 ## Features
 
 - **Authentication** – Sign up, sign in, sign out with strong password validation (min 8 chars, uppercase, lowercase, number, special character).
+- **Password Reset** – Users can request a password reset email via the "Forgot Password?" link on the login page.
+- **Profile Management** – View and edit your first and last name, see account creation date, last login, and total task count.
+- **Profile Avatar** – Automatically generated initials avatar (e.g., "AW" for Ashley Wanja) that updates when you change your name.
 - **Task CRUD** – Create, edit, mark complete, and delete tasks. Each task has a title, description, status (To Do, In Progress, Done), and due date.
 - **User‑owned data** – Tasks are scoped to each user via Firestore security rules and query filters.
 - **Real‑time updates** – Changes appear instantly across all devices using Firestore's `onSnapshot`.
 - **Filtering & Sorting** – Filter tasks by status (All, To Do, In Progress, Done) and sort by due date, created date, or title (ascending/descending).
 - **Color‑coded status** – Red for To Do, Amber for In Progress, Green for Done. Overdue tasks get a brick‑red left border.
+- **Notification System** – Bell icon with real‑time alerts for task actions (add, update, delete) and due‑date reminders (24h and 1h before deadline).
+- **Accessibility Controls** – Adjust font size (Small/Medium/Large) and font family (Sans/Serif/Mono) directly from the profile dropdown. Settings persist across sessions.
 - **Responsive design** – Works on desktop and mobile screens.
 - **Ledger Blue theme** – One hue family, warm‑neutral background, minimal UI with clear states.
 
@@ -100,6 +105,8 @@ src/
 ### State Management
 
 - **Authentication** – React Context (`AuthContext`) with `onAuthStateChanged` listener.
+- **Notifications** – React Context (`NotificationContext`) with localStorage persistence for retaining notifications across sessions. Manages unread counts, marking as read, and clearing notifications.
+- **Accessibility** – React Context (`AccessibilityContext`) with localStorage persistence for font size and font family preferences. Applies CSS variables globally.
 - **Tasks** – Custom hook (`useTasks`) that:
   - Subscribes to Firestore `onSnapshot` for real‑time updates.
   - Applies filtering and sorting via `useMemo` for performance.
@@ -158,7 +165,6 @@ service cloud.firestore {
 
 | Limitation | Status |
 |------------|--------|
-| Password reset ("Forgot Password?") | Non‑functional link |
 | Task archiving | Not implemented |
 | Task priorities (Low/Medium/High) | Not implemented |
 | Task search | Not implemented |
@@ -171,37 +177,31 @@ service cloud.firestore {
 
 Here are improvements I would prioritise:
 
-### 1. Password Reset
-Implement Firebase's `sendPasswordResetEmail` to make the "Forgot Password" link functional.
-
-### 2. Task Priorities
+### 1. Task Priorities
 Add a priority field (Low/Medium/High) with visual cues (e.g., subtle dot or border weight).
 
-### 3. Task Search
+### 2. Task Search
 Add a live search bar to filter tasks by title or description – a natural companion to the existing filter/sort.
 
-### 4. Task Labels/Tags
+### 3. Task Labels/Tags
 Allow users to add custom labels for better organisation (e.g., "Work", "Personal", "Shopping").
 
-### 5. Archive & Restore
+### 4. Archive & Restore
 Soft‑delete tasks and allow restoration from an archive view – avoids permanent data loss.
 
-### 6. Keyboard Shortcuts
+### 5. Keyboard Shortcuts
 Add shortcuts for power users (e.g., `Ctrl+N` to add a task, `Esc` to close modals).
 
-### 7. Accessibility Improvements
-Add more ARIA attributes, ensure full keyboard navigation, and test with screen readers.
-
-### 8. Automated Tests
+### 6. Automated Tests
 Write unit and integration tests for critical flows:
 - Authentication (signup, login, logout)
 - Task CRUD operations
 - Filtering and sorting logic
 
-### 9. Performance Optimisation
+### 7. Performance Optimisation
 Implement pagination or infinite scroll for large task lists.
 
-### 10. Dark Mode Toggle
+### 8. Dark Mode Toggle
 Though the theme respects system preferences, a dedicated toggle would improve user control.
 
 ---
@@ -215,6 +215,10 @@ Though the theme respects system preferences, a dedicated toggle would improve u
 | Real‑time updates | Firestore `onSnapshot` for instant UI updates |
 | Responsive design | Works across desktop and mobile screen sizes |
 | Accessibility | Semantic HTML, ARIA labels on action buttons, focus management |
+| Profile Management | Edit name, view stats, initials avatar |
+| Notifications | Bell icon with task alerts and due‑date reminders |
+| Password Reset | Forgot password email with spam alert |
+| Accessibility Controls | Font size and font family adjustments saved to localStorage |
 
 ---
 
