@@ -2,9 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Accessibility CSS Variables ── */
+:root {
+  --accessibility-font-size: 18px;
+  --accessibility-font-family: Inter, system-ui, sans-serif;
+}
+
 @layer base {
   body {
-    @apply bg-ledger-bg text-ledger-text font-sans antialiased;
+    @apply bg-ledger-bg text-ledger-text antialiased;
+    font-size: var(--accessibility-font-size);
+    font-family: var(--accessibility-font-family);
   }
 }
 

@@ -2,17 +2,18 @@ import { useState, useRef, useEffect } from 'react';
 import { User, Mail, Calendar, ListChecks, LogOut, Edit2 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTasks } from '../../hooks/useTasks';
+import { useAccessibility } from '../../contexts/AccessibilityContext';
 import { updateProfile } from 'firebase/auth';
 import { auth } from '../../firebase';
 
 /**
- * ProfileDropdown – displays user info and allows editing first/last name.
- * Shows: full name, email, account creation date, total tasks, last login.
- * Clicking the profile icon opens this dropdown.
+ * ProfileDropdown – displays user info, stats, and accessibility controls.
+ * Allows editing first/last name, and toggling font size & font family.
  */
 const ProfileDropdown = ({ onClose }) => {
-  const { user, logout } = useAuth(); // ✅ logout destructured here
+  const { user, logout } = useAuth();
   const { tasks } = useTasks();
+  const { fontSize, setFontSize, fontFamily, setFontFamily } = useAccessibility();
   const [isEditing, setIsEditing] = useState(false);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -168,10 +169,52 @@ const ProfileDropdown = ({ onClose }) => {
         </div>
       </div>
 
+      {/* ── Accessibility Controls ── */}
+      <div className="p-3 border-t border-ledger-pale">
+        <p className="text-xs text-ledger-tinted mb-2">Accessibility</p>
+        <div className="flex items-center gap-2">
+          {/* Font size buttons */}
+          <div className="flex gap-1">
+            {['small', 'medium', 'large'].map((size) => (
+              <button
+                key={size}
+                onClick={() => setFontSize(size)}
+                className={`px-2 py-0.5 text-xs rounded border transition ${
+                  fontSize === size
+                    ? 'bg-ledger-indigo text-white border-ledger-indigo'
+                    : 'border-ledger-pale hover:bg-ledger-pale'
+                }`}
+              >
+                {size === 'small' ? 'A' : size === 'medium' ? 'A' : 'A'}
+                {size === 'small' ? '↓' : size === 'medium' ? '−' : '↑'}
+              </button>
+            ))}
+          </div>
+          <span className="text-ledger-tinted/30">|</span>
+          {/* Font family buttons */}
+          <div className="flex gap-1">
+            {['sans', 'serif', 'mono'].map((family) => (
+              <button
+                key={family}
+                onClick={() => setFontFamily(family)}
+                className={`px-2 py-0.5 text-xs rounded border transition ${
+                  fontFamily === family
+                    ? 'bg-ledger-indigo text-white border-ledger-indigo'
+                    : 'border-ledger-pale hover:bg-ledger-pale'
+                }`}
+                style={{ fontFamily: family === 'sans' ? 'Inter, sans-serif' : family === 'serif' ? 'Georgia, serif' : 'monospace' }}
+              >
+                Aa
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* Sign out */}
       <div className="p-2 border-t border-ledger-pale">
         <button
-          onClick={logout} // ✅ now directly references logout from useAuth()
+          onClick={logout}
           className="w-full flex items-center justify-center gap-2 px-3 py-1.5 text-sm text-red-600 hover:bg-red-50 rounded transition"
         >
           <LogOut size={16} /> Sign Out
