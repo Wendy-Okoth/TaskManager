@@ -38,7 +38,7 @@ function App() {
       <div className="min-h-screen flex flex-col bg-ledger-bg">
         <Navbar
           user={user}
-          onLogout={logout}
+          // onLogout={logout} // ❌ removed – Navbar doesn't need it
           currentPage={page}
           setPage={setPage}
         />

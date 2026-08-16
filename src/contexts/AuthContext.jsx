@@ -5,7 +5,8 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
-  updateProfile, // ✅ add this import
+  updateProfile,
+  sendPasswordResetEmail, // ✅ added
 } from 'firebase/auth';
 
 const AuthContext = createContext();
@@ -25,7 +26,6 @@ export function AuthProvider({ children }) {
   const login = (email, password) =>
     signInWithEmailAndPassword(auth, email, password);
 
-  // ✅ Updated signup: accepts firstName & lastName
   const signup = async (email, password, firstName, lastName) => {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     await updateProfile(userCredential.user, {
@@ -36,12 +36,15 @@ export function AuthProvider({ children }) {
 
   const logout = () => signOut(auth);
 
+  const resetPassword = (email) => sendPasswordResetEmail(auth, email);
+
   const value = {
     user,
     loading,
     login,
     signup,
     logout,
+    resetPassword, // ✅ exposed
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

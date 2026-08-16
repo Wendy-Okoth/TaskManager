@@ -1,16 +1,21 @@
-import { CheckSquare } from 'lucide-react';
+import { useState } from 'react';
+import { CheckSquare, Home, ListChecks, User } from 'lucide-react';
 import NotificationBell from './NotificationBell';
+import ProfileDropdown from './ProfileDropdown';
+import { useAuth } from '../../contexts/AuthContext';
 
 /**
  * Navigation Bar Component
- * Displays brand logo, user navigation (Welcome / Tasks), and authentication controls.
- * When logged in, shows user's display name, notification bell, and a red sign-out button.
+ * Now includes profile icon (clickable) that opens a dropdown with user info and edit option.
+ * Welcome and Tasks buttons have icons. No standalone Sign Out button anymore.
  */
-const Navbar = ({ user, onLogin, onSignup, onLogout, currentPage, setPage }) => {
+const Navbar = ({ user, onLogin, onSignup, currentPage, setPage }) => {
+  const [showProfile, setShowProfile] = useState(false);
+
   return (
     <nav className="border-b border-ledger-pale bg-ledger-bg/90 backdrop-blur-sm sticky top-0 z-10">
       <div className="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
-        {/* Brand identity with logo */}
+        {/* Brand identity */}
         <div className="flex items-center gap-3">
           <CheckSquare size={24} className="text-ledger-indigo" strokeWidth={1.5} />
           <span className="text-xl font-medium text-ledger-indigo tracking-tight">Ledger Blue</span>
@@ -22,37 +27,45 @@ const Navbar = ({ user, onLogin, onSignup, onLogout, currentPage, setPage }) => 
         <div className="flex items-center gap-3">
           {user ? (
             <>
-              <span className="text-sm text-ledger-tinted hidden sm:block">
-                {user.displayName || user.email}
-              </span>
+              {/* Welcome button with icon */}
               <button
                 onClick={() => setPage('welcome')}
-                className={`px-3 py-1.5 text-sm rounded transition ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 text-sm rounded transition ${
                   currentPage === 'welcome'
                     ? 'bg-ledger-indigo text-white'
                     : 'text-ledger-text hover:bg-ledger-pale'
                 }`}
               >
-                Welcome
+                <Home size={16} strokeWidth={1.5} />
               </button>
+
+              {/* Tasks button with icon */}
               <button
                 onClick={() => setPage('tasks')}
-                className={`px-3 py-1.5 text-sm rounded transition ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 text-sm rounded transition ${
                   currentPage === 'tasks'
                     ? 'bg-ledger-indigo text-white'
                     : 'text-ledger-text hover:bg-ledger-pale'
                 }`}
               >
-                Tasks
+                <ListChecks size={16} strokeWidth={1.5} />
               </button>
-              {/* Notification Bell */}
+
               <NotificationBell />
-              <button
-                onClick={onLogout}
-                className="px-3 py-1.5 text-sm bg-red-500 hover:bg-red-600 text-white rounded transition"
-              >
-                Sign Out
-              </button>
+
+              {/* Profile icon with dropdown */}
+              <div className="relative">
+                <button
+                  onClick={() => setShowProfile(!showProfile)}
+                  className="p-1.5 rounded hover:bg-ledger-pale transition text-ledger-tinted"
+                  aria-label="Profile"
+                >
+                  <User size={20} strokeWidth={1.5} />
+                </button>
+                {showProfile && (
+                  <ProfileDropdown onClose={() => setShowProfile(false)} />
+                )}
+              </div>
             </>
           ) : (
             <>

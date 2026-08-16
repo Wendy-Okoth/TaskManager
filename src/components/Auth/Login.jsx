@@ -3,6 +3,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useState } from 'react';
 import Input from '../Input';
 import { CheckSquare } from 'lucide-react';
+import ForgotPasswordModal from './ForgotPasswordModal'; // ✅ new component
 
 /**
  * Login Component
@@ -11,9 +12,9 @@ import { CheckSquare } from 'lucide-react';
 const Login = ({ onSwitch, onBack }) => {
   const { login } = useAuth();
   const [error, setError] = useState('');
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm();
 
-  /** Submits credential data to Firebase auth context */
   const onSubmit = async (data) => {
     try {
       setError('');
@@ -26,7 +27,6 @@ const Login = ({ onSwitch, onBack }) => {
   return (
     <div className="min-h-screen bg-ledger-bg flex items-center justify-center p-4">
       <div className="bg-ledger-card border border-ledger-pale rounded-lg shadow-sm max-w-md w-full p-8">
-        {/* Logo / Brand header */}
         <div className="flex items-center justify-center gap-2 mb-6">
           <CheckSquare size={28} className="text-ledger-indigo" strokeWidth={1.5} />
           <span className="text-xl font-medium text-ledger-indigo tracking-tight">Ledger Blue</span>
@@ -36,7 +36,6 @@ const Login = ({ onSwitch, onBack }) => {
           Welcome Back
         </h2>
 
-        {/* Global error alert box */}
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4 text-sm">
             {error}
@@ -65,17 +64,16 @@ const Login = ({ onSwitch, onBack }) => {
           </button>
         </form>
 
-        {/* Placeholder hook for password recovery */}
+        {/* Forgot Password trigger */}
         <div className="mt-3 text-right">
           <button
-            onClick={() => alert('Password reset functionality coming soon.')}
+            onClick={() => setShowForgotPassword(true)}
             className="text-sm text-ledger-brick hover:underline"
           >
             Forgot Password?
           </button>
         </div>
 
-        {/* Navigation triggers for view switching */}
         <div className="mt-6 pt-4 border-t border-ledger-pale text-sm text-center">
           <p className="text-ledger-tinted">
             Don't have an account?{' '}
@@ -90,6 +88,11 @@ const Login = ({ onSwitch, onBack }) => {
           </button>
         </div>
       </div>
+
+      {/* Forgot Password Modal */}
+      {showForgotPassword && (
+        <ForgotPasswordModal onClose={() => setShowForgotPassword(false)} />
+      )}
     </div>
   );
 };
