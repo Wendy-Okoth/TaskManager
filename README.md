@@ -3,7 +3,7 @@
 A calm, focused task management application built with React and Firebase.  
 Designed with a single indigo hue, left‑edge status borders, and zero visual noise.
 
-**Live demo:** *[Coming soon – deployment pending]*
+**Live demo:** [https://taskmanager-ed022.web.app/](https://taskmanager-ed022.web.app/)
 
 ---
 
